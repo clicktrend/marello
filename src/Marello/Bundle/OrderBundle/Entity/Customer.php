@@ -2,6 +2,7 @@
 
 namespace Marello\Bundle\OrderBundle\Entity;
 
+use Marello\Bundle\OrderBundle\Model\ExtendCustomer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,11 +34,15 @@ use Oro\Bundle\OrganizationBundle\Entity\Ownership\AuditableOrganizationAwareTra
  *          },
  *          "dataaudit"={
  *              "auditable"=true
+ *          },
+ *          "grid"={
+ *              "default"="customer-grid",
+ *              "context"="customer-context-grid"
  *          }
  *      }
  * )
  */
-class Customer implements FullNameInterface, EmailHolderInterface, EmailOwnerInterface, OrganizationAwareInterface
+class Customer extends ExtendCustomer implements FullNameInterface, EmailHolderInterface, EmailOwnerInterface, OrganizationAwareInterface
 {
     use HasFullNameTrait, HasEmailAddressTrait;
     use EntityCreatedUpdatedAtTrait;
@@ -121,6 +126,7 @@ class Customer implements FullNameInterface, EmailHolderInterface, EmailOwnerInt
      */
     public function __construct()
     {
+        parent::__construct();
         $this->addresses = new ArrayCollection();
     }
 

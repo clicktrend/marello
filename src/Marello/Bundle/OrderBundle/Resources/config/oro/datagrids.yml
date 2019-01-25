@@ -518,3 +518,134 @@ datagrids:
         properties:
             id: ~
         actions: ~
+
+    order-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - o
+                from:
+                    - { table: MarelloOrderBundle:Order, alias: o }
+        columns:
+            id:
+                label:            marello.order.id.label
+            orderNumber:
+                label:            marello.order.order_number.label
+                frontend_type:    string
+            orderReference:
+                label:            marello.order.order_reference.label
+                frontend_type:    string
+            grandTotal:
+                label:            marello.order.grand_total.label
+                type:             localized_number
+                method:           formatCurrency
+                context_resolver: Marello\Bundle\DataGridBundle\Grid\FormatterContextResolver::getResolverCurrencyClosure
+                align:            right
+        sorters:
+            columns:
+                orderNumber:
+                    data_name: o.orderNumber
+                orderReference:
+                    data_name: o.orderReference
+            default:
+                orderNumber: "%oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC"
+        filters:
+            columns:
+                orderNumber:
+                    type: string
+                    data_name: o.orderNumber
+                orderReference:
+                    type: string
+                    data_name: o.orderReference
+        properties:
+            view_link:
+                type:   url
+                route:  marello_order_order_view
+                params:
+                    id: id
+        actions:
+            view:
+                type:       navigate
+                link:       view_link
+                icon:       eye
+                rowAction:  true
+        action_configuration: [@marello_order.datagrid.action_permission_provider, "getActionPermissions"]
+
+    order-context-grid:
+        extends: order-grid
+        options:
+            entityHint: order
+            entity_pagination: true
+            toolbarOptions:
+                pageSize:
+                    default_per_page: 10
+            routerEnabled: false
+
+    customer-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - c
+                from:
+                    - { table: MarelloOrderBundle:Customer, alias: c }
+        columns:
+            id:
+                label: marello.order.customer.id.label
+            firstName:
+                label: marello.order.customer.first_name.label
+            lastName:
+                label: marello.order.customer.last_name.label
+            email:
+                label: marello.order.customer.email.label
+        filters:
+            columns:
+                id:
+                    type: number
+                    data_name: c.id
+                firstName:
+                    type: string
+                    data_name: c.firstName
+                lastName:
+                    type: string
+                    data_name: c.lastName
+                email:
+                    type: string
+                    data_name: c.email
+        sorters:
+            columns:
+                id:
+                    data_name: c.id
+                firstName:
+                    data_name: c.firstName
+                lastName:
+                    data_name: c.lastName
+                email:
+                    data_name: c.email
+            default:
+                id: "%oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC"
+        properties:
+            view_link:
+                type:   url
+                route:  marello_order_customer_view
+                params:
+                    id: id
+        actions:
+            view:
+                type:       navigate
+                link:       view_link
+                icon:       eye
+                rowAction:  true
+        options:
+            entityHint: customer
+
+    customer-context-grid:
+        extends: customer-grid
+        options:
+            entityHint: customer
+            entity_pagination: true
+            toolbarOptions:
+                pageSize:
+                    default_per_page: 10
+            routerEnabled: false
